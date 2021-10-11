@@ -1,5 +1,5 @@
 
-export { readlineSync, persondetails, Person, addDetails, displayDetails }
+export { readlineSync, persondetails, Person, addDetails, displayDetails,searchDetails,deleteDetails}
 const readlineSync = require('readline-sync');
 declare var require: any;
 var json : any;
@@ -25,9 +25,15 @@ class Person {
     //     this.zipCode = zipCode;
     // }
 }
-
-// let getdata = new  Person("anu","ram","anu@gmail.com",9786545634,"gadwal","telangana",509345);
-// console.log(getdata)
+interface contactdetails{
+    firstName : string;
+    lastName : string;
+    emailId : string;
+    phoneNumber : number;
+    city :string;
+    state : string;
+    zipCode : number;   
+};
 
 function addDetails() : any {
 var persondata = new Person();
@@ -50,6 +56,7 @@ var persondata = new Person();
 }
 var persondetails = []
 persondetails.push(Obj);  
+console.log(persondetails)
   
 fs.readFile('persondata.json', 'utf8', function (err, data) {
    
@@ -80,37 +87,29 @@ function displayDetails() {
     })
 }
 
-// function updateDetails(){
-//     var contactData =  persondetails
-// }
 
-function UpdateData(editId) {
-    console.log("editid", editId);
-    var data = persondetails
-    const details = data
-    let isAvailable = false;
+function searchDetails(city) {
+    console.log("City searched: ", city);
+    var contactdata = persondetails
+    const details = contactdata
     for (let i = 0; i < details.length; i++) {
-        if (details[i].id === editId) {
-            console.log('Update contact for id = ' + editId)
-            let editAddress: string = readlineSync.question(' Enter the new Name ')
-            let editCity: string = readlineSync.question(' Enter the new city ')
-            let editZip: string = readlineSync.question(' Enter the new state ')
-            let editMob: number = readlineSync.questionInt('Enter the new phone number')
-            details[i].address = editAddress;
-            details[i].city = editCity;
-            details[i].zip = editZip;
-            details[i].mob = editMob;
-            isAvailable = true;
+        if (details[i].city.toLowerCase() == city.toLowerCase()) {
+            console.log(details[i]);
         }
-    }
-    if (isAvailable == true) {
-        fs.writeFileSync('contact.json', JSON.stringify(details, null, 2));
-        console.log("Contact updated!")
-    }
-    else {
-        console.log("Entry not found.")
     }
 }
 
+
+
+
+function deleteDetails(deletecity) {
+    var data = persondetails
+    const deletedetails = data   
+    const removedetails = deletedetails.findIndex(item => item.city === deletecity);
+    deletedetails.splice(removedetails, 1); 
+    fs.writeFileSync('contact.json', JSON.stringify(deletedetails));
+    console.log("Contact deleted!")
+}
+displayDetails();
 
 

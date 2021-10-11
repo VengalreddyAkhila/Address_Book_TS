@@ -1,11 +1,11 @@
 "use strict";
 exports.__esModule = true;
-exports.displayDetails = exports.adddetails = exports.Person = exports.persondetails = exports.readlineSync = void 0;
+exports.deleteDetails = exports.searchDetails = exports.displayDetails = exports.addDetails = exports.Person = exports.persondetails = exports.readlineSync = void 0;
 var readlineSync = require('readline-sync');
 exports.readlineSync = readlineSync;
 var json;
 var Obj;
-var persondetails = require("./data.json");
+var persondetails = require("./persondata.json");
 exports.persondetails = persondetails;
 var fs = require("fs");
 var Person = /** @class */ (function () {
@@ -14,9 +14,8 @@ var Person = /** @class */ (function () {
     return Person;
 }());
 exports.Person = Person;
-// let getdata = new  Person("anu","ram","anu@gmail.com",9786545634,"gadwal","telangana",509345);
-// console.log(getdata)
-function adddetails() {
+;
+function addDetails() {
     var persondata = new Person();
     persondata.firstName = readlineSync.question('enter firstname : ');
     persondata.lastName = readlineSync.question('enter lastname : ');
@@ -36,11 +35,12 @@ function adddetails() {
     };
     var persondetails = [];
     persondetails.push(Obj);
+    console.log(persondetails);
     fs.readFile('persondata.json', 'utf8', function (err, data) {
         persondetails = JSON.parse(data);
         persondetails.push(Obj);
-        // json = JSON.stringify(persondetails);
-        fs.writeFile('persondata.json', json = JSON.stringify(persondetails), 'utf8', function (err) {
+        json = JSON.stringify(persondetails);
+        fs.writeFile('persondata.json', JSON.stringify(persondetails), 'utf8', function (err) {
             if (err) {
                 console.log(err);
             }
@@ -49,9 +49,9 @@ function adddetails() {
             }
         });
     });
-    console.log("person Contact details added");
+    console.log(" Contact details added");
 }
-exports.adddetails = adddetails;
+exports.addDetails = addDetails;
 function displayDetails() {
     fs.readFile('./persondata.json', 'utf8', function (err, data) {
         if (err) {
@@ -63,3 +63,24 @@ function displayDetails() {
     });
 }
 exports.displayDetails = displayDetails;
+function searchDetails(city) {
+    console.log("City searched: ", city);
+    var contactdata = persondetails;
+    var details = contactdata;
+    for (var i = 0; i < details.length; i++) {
+        if (details[i].city.toLowerCase() == city.toLowerCase()) {
+            console.log(details[i]);
+        }
+    }
+}
+exports.searchDetails = searchDetails;
+function deleteDetails(deletecity) {
+    var data = persondetails;
+    var details = data;
+    var remove = details.findIndex(function (item) { return item.city === deletecity; });
+    details.splice(remove, 1);
+    fs.writeFileSync('contact.json', JSON.stringify(details));
+    console.log("Contact deleted!");
+}
+exports.deleteDetails = deleteDetails;
+displayDetails();
